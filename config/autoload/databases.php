@@ -13,18 +13,18 @@ use function Hyperf\Support\env;
 
 return [
     'default' => [
-        'driver' => env('DB_DRIVER', 'mysql'),
-        'host' => env('DB_HOST', 'localhost'),
-        'port' => env('DB_PORT', 3306),
-        'database' => env('DB_DATABASE', 'hyperf'),
-        'username' => env('DB_USERNAME', 'root'),
+        'driver' => env('DB_DRIVER'),
+        'host' => env('DB_HOST'),
+        'port' => env('DB_PORT'),
+        'database' => env('DB_DATABASE'),
+        'username' => env('DB_USERNAME'),
         'password' => env('DB_PASSWORD', ''),
-        'charset' => env('DB_CHARSET', 'utf8mb4'),
+        'charset' => env('DB_CHARSET'),
         'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
         'prefix' => env('DB_PREFIX', ''),
         'pool' => [
-            'min_connections' => 1,
-            'max_connections' => 10,
+            'min_connections' => 10,
+            'max_connections' => 100,
             'connect_timeout' => 10.0,
             'wait_timeout' => 3.0,
             'heartbeat' => -1,
