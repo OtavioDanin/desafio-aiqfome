@@ -1,17 +1,49 @@
 services:
-  hyperf-skeleton:
-    container_name: hyperf-skeleton
-    image: hyperf-skeleton
+  desafio-aiqfome:
+    container_name: desafio-aiqfome
+    image: desafio-aiqfome
     build:
       context: .
+    restart: unless-stopped
+    stdin_open: true
+    tty: true 
     volumes:
       - ./:/opt/www
+    depends_on:
+      - db
+    networks:
+      - aiq_network
     ports:
       - 9501:9501
     environment:
       - APP_ENV=dev
       - SCAN_CACHEABLE=false
+  db:
+    container_name: db
+    image: postgres:17.5-alpine3.22
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+    ports:
+      - 5432:5432
+    networks:
+      - aiq_network
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+    ports:
+      - 5050:80
+      - 5051:443
+    depends_on:
+      - db
+    networks:
+      - aiq_network
 
 networks:
-  default:
+  aiq_network:
     name: hyperf-skeleton
