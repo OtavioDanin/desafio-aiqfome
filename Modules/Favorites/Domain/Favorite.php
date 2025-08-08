@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Favorites\Domain;
 
 use Modules\Clients\Domain\Client;;
@@ -10,8 +12,8 @@ use Modules\Clients\Domain\Client;;
  */
 class Favorite extends Model
 {
-    protected ?string $table = 'clientes_produtos_favoritos';
-    protected array $fillable = ['cliente_id', 'produto_id'];
+    protected ?string $table = 'favorite_products';
+    protected array $fillable = ['cliente_id', 'produto_id', 'data_adicao'];
     public bool $timestamps = false;
 
     public function client()
