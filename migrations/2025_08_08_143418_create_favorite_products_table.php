@@ -23,8 +23,6 @@ return new class extends Migration
                   ->onDelete('cascade');
             
             $table->index('produto_id', 'idx_favoritos_produto_id');
-
-            // $table->datetimes();
         });
     }
 
