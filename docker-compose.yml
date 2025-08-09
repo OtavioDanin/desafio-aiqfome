@@ -43,7 +43,23 @@ services:
       - db
     networks:
       - aiq_network
+  cache:
+    container_name: cache
+    image: redis:alpine3.22
+    ports:
+      - 6379:6379
+    networks:
+      - aiq_network
+  redisinsight:
+    container_name: redis-insight
+    image: redis/redisinsight:latest
+    depends_on:
+      - cache
+    ports:
+      - 5540:5540
+    networks:
+      - aiq_network
 
 networks:
   aiq_network:
-    name: hyperf-skeleton
+    driver: bridge
