@@ -12,6 +12,7 @@ use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Validation\ValidationException;
 use Modules\Clients\Application\ClientRequestValidation;
 use Modules\Clients\Domain\ClientException;
+use Modules\Clients\DTO\ClientDTO;
 use Throwable;
 
 class ClientController extends AbstractController
@@ -19,7 +20,10 @@ class ClientController extends AbstractController
     /**
      * @var ClientServiceInterface
      */
-    public function __construct(protected ClientService $clientService) {}
+    public function __construct(
+        protected ClientService $clientService,
+        protected ClientDTO $dto
+    ) {}
 
     public function index(ResponseInterface $response): \Psr\Http\Message\ResponseInterface
     {
@@ -56,7 +60,7 @@ class ClientController extends AbstractController
     {
         try {
             $request->validated();
-            $dataClient = $request->all();
+            $dataClient = $this->dto->toArray($request->all());
             $this->clientService->save($dataClient);
             return $response
                 ->json(['data' => $dataClient, 'message' => 'Success in saving the client.'])
@@ -75,7 +79,7 @@ class ClientController extends AbstractController
                 ->withStatus(503);
         } catch (Throwable $thEx) {
             return $response
-                ->json(['message' => 'Ocorreu um erro fora do previsto, tente novamente em alguns instantes.'])
+                ->json(['message' => $thEx->getMessage()])
                 ->withStatus(500);
         }
     }
@@ -84,7 +88,7 @@ class ClientController extends AbstractController
     {
         try {
             $request->validated();
-            $dataClient = $request->all();
+            $dataClient = $this->dto->toArray($request->all());
             $this->clientService->update($id, $dataClient);
             return $response
                 ->json(['data' => $dataClient, 'message' => 'Success in update the client.'])
