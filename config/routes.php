@@ -10,8 +10,19 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 use Hyperf\HttpServer\Router\Router;
+use Modules\Clients\UI\Controllers\ClientController;
 
-Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
+Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'Modules\Clients\UI\Controllers\IndexController@index');
+
+Router::addGroup('/api', function () {
+    Router::addGroup('/clients', function () {
+        Router::get('', [ClientController::class, 'index']);
+        Router::post('', [ClientController::class, 'store']);
+        Router::get('/{id}', [ClientController::class, 'show']);
+        Router::put('/{id}', [ClientController::class, 'update']);
+        Router::delete('/{id}', [ClientController::class, 'destroy']);
+    });
+});
 
 Router::get('/favicon.ico', function () {
     return '';
