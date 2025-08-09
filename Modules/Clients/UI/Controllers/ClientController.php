@@ -21,7 +21,7 @@ class ClientController extends AbstractController
      */
     public function __construct(protected ClientService $clientService) {}
 
-    public function index(ResponseInterface $response)
+    public function index(ResponseInterface $response): \Psr\Http\Message\ResponseInterface
     {
         try {
             $clients = $this->clientService->getAll();
@@ -35,7 +35,7 @@ class ClientController extends AbstractController
         }
     }
 
-    public function show(ResponseInterface $response, int $id)
+    public function show(ResponseInterface $response, int $id): \Psr\Http\Message\ResponseInterface
     {
         try {
             $client = $this->clientService->getById($id);
@@ -52,7 +52,7 @@ class ClientController extends AbstractController
         }
     }
 
-    public function store(ClientRequestValidation $request, ResponseInterface $response)
+    public function store(ClientRequestValidation $request, ResponseInterface $response): \Psr\Http\Message\ResponseInterface
     {
         try {
             $request->validated();
@@ -80,7 +80,7 @@ class ClientController extends AbstractController
         }
     }
 
-    public function update(ClientRequestValidation $request, ResponseInterface $response, int $id)
+    public function update(ClientRequestValidation $request, ResponseInterface $response, int $id): \Psr\Http\Message\ResponseInterface
     {
         try {
             $request->validated();
@@ -104,10 +104,13 @@ class ClientController extends AbstractController
         }
     }
 
-    public function destroy(ResponseInterface $response, int $id)
+    public function destroy(ResponseInterface $response, int $id): \Psr\Http\Message\ResponseInterface
     {
         try {
             $this->clientService->delete($id);
+            return $response
+                ->json([])
+                ->withStatus(204);
         } catch (ModelNotFoundException) {
             return $response
                 ->json(['message' => 'Client not found for Delete.'])
