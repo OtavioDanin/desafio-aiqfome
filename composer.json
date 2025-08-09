@@ -51,8 +51,8 @@
             "App\\": "app/",
             "Modules\\Clients\\": "Modules/Clients/",
             "Modules\\Favorites\\": "Modules/Favorites/",
-            "Modules\\Products\\": "Modules/Products/"
-
+            "Modules\\Products\\": "Modules/Products/",
+            "Modules\\Common\\": "Modules/Common/"
         },
         "files": []
     },
