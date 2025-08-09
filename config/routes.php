@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 use Hyperf\HttpServer\Router\Router;
 use Modules\Clients\UI\Controllers\ClientController;
+use Modules\Favorites\UI\FavoriteController;
 
 Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'Modules\Clients\UI\Controllers\IndexController@index');
 
@@ -21,6 +22,12 @@ Router::addGroup('/api', function () {
         Router::get('/{id}', [ClientController::class, 'show']);
         Router::put('/{id}', [ClientController::class, 'update']);
         Router::delete('/{id}', [ClientController::class, 'destroy']);
+    });
+    
+    Router::addGroup('/favorites', function () {
+    //     Router::get('', [App\Controller\FavoritoController::class, 'index']);
+        Router::post('', [FavoriteController::class, 'store']);
+    //     Router::delete('/{id}', [App\Controller\FavoritoController::class, 'destroy']);
     });
 });
 

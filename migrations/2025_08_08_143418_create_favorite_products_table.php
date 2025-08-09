@@ -13,16 +13,20 @@ return new class extends Migration
     {
         Schema::create('favorite_products', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('cliente_id');
-            $table->bigInteger('produto_id')->nullable(false);
-            $table->timestamp('data_adicao')->useCurrent();
+            $table->bigInteger('client_id')->nullable(false);
+            $table->bigInteger('product_id')->nullable(false);
+            $table->string('titulo', '255');
+            $table->string('imagem', '255');
+            $table->string('preco', '10');
+            $table->string('review', '10');
+            $table->timestamp('data_criacao')->useCurrent();
 
-            $table->foreign('cliente_id')
+            $table->foreign('client_id')
                   ->references('id')
                   ->on('clients')
                   ->onDelete('cascade');
             
-            $table->index('produto_id', 'idx_favoritos_produto_id');
+            $table->index('product_id', 'idx_favoritos_product_id');
         });
     }
 

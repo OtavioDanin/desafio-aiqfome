@@ -22,7 +22,7 @@ class ClientController extends AbstractController
      */
     public function __construct(
         protected ClientService $clientService,
-        protected ClientDTO $dto
+        protected ClientDTO $dto,
     ) {}
 
     public function index(ResponseInterface $response): \Psr\Http\Message\ResponseInterface
