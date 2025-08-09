@@ -43,4 +43,12 @@ class ClientService implements ClientServiceInterface
     {
         $this->clientRepository->update($id, $data);
     }
+
+    public function delete(int $id): void
+    {
+        $hasDelete = $this->clientRepository->delete($id);
+        if(!isset($hasDelete) || !$hasDelete){
+            throw new ClientException("Failure to remove the client.", 503);
+        }
+    }
 }

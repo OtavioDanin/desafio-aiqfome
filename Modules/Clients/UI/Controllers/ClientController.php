@@ -8,11 +8,11 @@ use Hyperf\Database\Exception\QueryException;
 use Hyperf\Database\Model\ModelNotFoundException;
 use Modules\Clients\Application\ClientService;
 use Modules\Clients\Domain\ClientServiceInterface;
-use Throwable;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Validation\ValidationException;
 use Modules\Clients\Application\ClientRequestValidation;
 use Modules\Clients\Domain\ClientException;
+use Throwable;
 
 class ClientController extends AbstractController
 {
@@ -45,7 +45,7 @@ class ClientController extends AbstractController
         } catch (ModelNotFoundException) {
             return $response->json(['data' => [], 'message' => 'Client not found'])
                 ->withStatus(404);
-        } catch (Throwable $th) {
+        } catch (Throwable) {
             return $response
                 ->json(['message' => 'Ocorreu um erro fora do previsto, tente novamente em alguns instantes.'])
                 ->withStatus(500);
@@ -75,14 +75,14 @@ class ClientController extends AbstractController
                 ->withStatus(503);
         } catch (Throwable $thEx) {
             return $response
-                ->json(['message' => $thEx->getMessage()])
+                ->json(['message' => 'Ocorreu um erro fora do previsto, tente novamente em alguns instantes.'])
                 ->withStatus(500);
         }
     }
 
     public function update(ClientRequestValidation $request, ResponseInterface $response, int $id)
     {
-         try {
+        try {
             $request->validated();
             $dataClient = $request->all();
             $this->clientService->update($id, $dataClient);
@@ -97,9 +97,28 @@ class ClientController extends AbstractController
             return $response
                 ->json(['message' => 'Failed to update the Client.'])
                 ->withStatus(503);
-        } catch (Throwable $thEx) {
+        } catch (Throwable) {
             return $response
-                ->json(['message' => $thEx->getMessage()])
+                ->json(['message' => 'Ocorreu um erro fora do previsto, tente novamente em alguns instantes.'])
+                ->withStatus(500);
+        }
+    }
+
+    public function destroy(ResponseInterface $response, int $id)
+    {
+        try {
+            $this->clientService->delete($id);
+        } catch (ModelNotFoundException) {
+            return $response
+                ->json(['message' => 'Client not found for Delete.'])
+                ->withStatus(404);
+        } catch (QueryException) {
+            return $response
+                ->json(['message' => 'Failed to update the Client.'])
+                ->withStatus(503);
+        } catch (Throwable) {
+            return $response
+                ->json(['message' => 'Ocorreu um erro fora do previsto, tente novamente em alguns instantes.'])
                 ->withStatus(500);
         }
     }

@@ -35,4 +35,10 @@ class ClientRepository implements ClientRepositoryInterface
         $cliente = $this->client::query()->findOrFail($id);
         return $cliente->updateOrFail($data);
     }
+
+    public function delete(int $id): ?bool
+    {
+        $cliente = $this->client::query()->findOrFail($id);
+        return $cliente->delete();
+    }
 }
