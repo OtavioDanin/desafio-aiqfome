@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Clients\Application;
 
+use Modules\Clients\Domain\ClientException;
 use Modules\Clients\Domain\ClientRepositoryInterface;
 use Modules\Clients\Domain\ClientServiceInterface;
 use Modules\Clients\Infrastructure\ClientRepository;
@@ -28,5 +29,18 @@ class ClientService implements ClientServiceInterface
     {
         $client =  $this->clientRepository->findById($id);
         return $client->toArray();
+    }
+
+    public function save(array $data): void
+    {
+        if(empty($data)){
+            throw new ClientException('Empty data for insertion client.', 400);
+        }
+        $this->clientRepository->persist($data);
+    }
+
+    public function update(int $id, array $data): void
+    {
+        $this->clientRepository->update($id, $data);
     }
 }

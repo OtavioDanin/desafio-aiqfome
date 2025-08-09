@@ -20,8 +20,19 @@ class ClientRepository implements ClientRepositoryInterface
         return $this->client::query()->get(['id', 'nome', 'email']);
     }
 
-    public function findById(int $id): Collection
+    public function findById(int $id): Client
     {
         return $this->client::query()->findOrFail($id, ['id', 'nome', 'email']);
+    }
+
+    public function persist(array $data): Client
+    {
+        return $this->client::query()->create($data);
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        $cliente = $this->client::query()->findOrFail($id);
+        return $cliente->updateOrFail($data);
     }
 }
