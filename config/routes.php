@@ -25,9 +25,9 @@ Router::addGroup('/api', function () {
     });
     
     Router::addGroup('/favorites', function () {
-    //     Router::get('', [App\Controller\FavoritoController::class, 'index']);
         Router::post('', [FavoriteController::class, 'store']);
-    //     Router::delete('/{id}', [App\Controller\FavoritoController::class, 'destroy']);
+    //     Router::get('', [FavoriteController::class, 'index']);
+    //     Router::delete('/{id}', [FavoriteController::class, 'destroy']);
     });
 });
 
