@@ -6,6 +6,84 @@
 
 API RESTful desenvolvida como parte do desafio Aiqfome. O projeto consiste em um sistema para gerenciar clientes e suas listas de produtos favoritos, com integração a uma API externa de produtos e um sistema de cache para otimização de performance.
 
+# Arquitetura e Design do Projeto: Monólito Modular com DDD e Clean Architecture
+
+Este projeto foi estruturado utilizando uma abordagem moderna e robusta que combina os princípios de **Monólito Modular**, **Domain-Driven Design (DDD)** e **Clean Architecture**. O objetivo é criar uma base de código organizada, coesa, com baixo acoplamento e alta testabilidade, proporcionando os benefícios de organização dos microsserviços sem a complexidade operacional.
+
+A imagem da estrutura de pastas reflete perfeitamente a aplicação destes conceitos:
+
+```
+Modules/
+├── Clients/
+│   ├── Application
+│   ├── Domain
+│   ├── DTO
+│   ├── Infrastructure
+│   └── UI
+└── Favorites/
+    ├── Application
+    ├── Domain
+    ├── DTO
+    ├── Infrastructure
+    └── UI
+```
+
+## 1. O Monólito Modular (A Estrutura Geral)
+
+Em vez de construir uma única aplicação monolítica onde tudo está misturado, o código é dividido em **Módulos** independentes que podem se comunicar de forma bem definida.
+
+-   **Aplicação no Projeto:** O diretório `Modules/` é a materialização desta ideia. `Clients` e `Favorites` são módulos de negócio distintos. Eles são deployados juntos como uma única aplicação (o monólito), mas seu código é logicamente separado, facilitando a manutenção e a evolução. O módulo `Common` (ou *Shared Kernel*) contém código que é verdadeiramente compartilhado entre os outros módulos, como interfaces genéricas ou classes base.
+
+## 2. Domain-Driven Design - DDD (O Coração do Negócio)
+
+O DDD foca em modelar o software em torno do domínio do negócio. Cada módulo representa um **Bounded Context** (Contexto Delimitado), que é uma fronteira onde um modelo de domínio específico se aplica.
+
+-   **Aplicação no Projeto:**
+    -   **Módulo `Clients`:** É o Bounded Context para tudo relacionado a clientes. As regras de negócio, como "o e-mail deve ser único", vivem aqui.
+    -   **Módulo `Favorites`:** É o Bounded Context para a lógica de favoritos. Regras como "um produto não pode ser duplicado" pertencem a este módulo.
+    -   Essa separação garante que a complexidade de cada parte do negócio seja tratada de forma isolada.
+
+## 3. Clean Architecture (A Organização Interna dos Módulos)
+
+Enquanto o Monólito Modular define a organização *macro* do projeto, a Clean Architecture define a organização *micro* (interna) de cada módulo. Ela organiza o código em camadas, com uma regra estrita de dependência: **as dependências apontam sempre para dentro**.
+
+A estrutura de pastas dentro de cada módulo (`Application`, `Domain`, `Infrastructure`, `UI`) implementa diretamente essas camadas:
+
+-   **`Domain` (O Núcleo):**
+    -   **Propósito:** Contém a lógica de negócio mais pura e as regras essenciais.
+    -   **Conteúdo:** Entidades (ex: `Cliente.php`), Value Objects, e, crucialmente, as **interfaces dos repositórios** (ex: `ClienteRepositoryInterface.php`).
+    -   **Regra:** Não depende de nenhuma outra camada.
+
+-   **`Application` (Casos de Uso):**
+    -   **Propósito:** Orquestra o fluxo de dados e dispara a lógica do domínio para executar os casos de uso do sistema.
+    -   **Conteúdo:** Classes de serviço ou "Use Cases" (ex: `Um produto não pode ser duplicado na lista do CLiente.php`).
+    -   **Regra:** Depende da camada `Domain`, mas não sabe nada sobre a `UI` ou a `Infrastructure`.
+
+-   **`UI` (Interface com o Mundo Externo):**
+    -   **Propósito:** É o ponto de entrada do módulo.
+    -   **Conteúdo:** **Controllers** do Hyperf (`ClienteController.php`), rotas, e possivelmente comandos de console.
+    -   **Regra:** Recebe as requisições HTTP e chama os serviços da camada `Application`.
+
+-   **`Infrastructure` (Detalhes Técnicos):**
+    -   **Propósito:** Contém tudo que é volátil e externo: banco de dados, caches, clientes de API, etc.
+    -   **Conteúdo:** Implementações concretas das interfaces do `Domain` (ex: `HttpClient.php`, `RedisCache.php`), clientes HTTP para a `FakeStoreAPI`.
+    -   **Regra:** Depende das camadas internas (`Domain`, `Application`), mas as camadas internas não dependem dela, apenas de suas abstrações (interfaces).
+
+-   **`DTO` (Data Transfer Objects):**
+    -   **Propósito:** Objetos simples que carregam dados entre as camadas, especialmente da `UI` para a `Application`, garantindo um contrato de dados claro e imutável.
+
+### Fluxo de uma Requisição
+
+A combinação destes padrões cria um fluxo de dados limpo e desacoplado:
+
+1.  Uma requisição HTTP chega à camada **UI** (`ClienteController`).
+2.  O `Controller` utiliza um **DTO** para empacotar os dados da requisição.
+3.  O `Controller` invoca um caso de uso na camada de **Application**.
+4.  O `UseCase` executa a lógica e utiliza uma interface do **Domain** (`ClienteRepositoryInterface`) para solicitar a persistência.
+5.  O contêiner de Injeção de Dependência do Hyperf fornece a implementação concreta, que está na camada de **Infrastructure** (`ClienteRepository`), para salvar o dado no banco.
+
+Essa arquitetura resulta em um sistema **escalável**, **fácil de testar** (pois cada camada pode ser testada de forma isolada) e **pronto para o futuro** (um módulo bem definido pode, se necessário, ser extraído para um microsserviço com muito menos esforço).
+
 ## Tecnologias Utilizadas
 
 - **Framework:** [Hyperf 3+](https://hyperf.io/) (baseado em Swoole)
