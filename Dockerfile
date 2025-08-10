@@ -11,12 +11,20 @@ LABEL maintainer="Hyperf Developers <group@hyperf.io>" version="1.0" license="MI
 ##
 # ---------- env settings ----------
 ##
-# --build-arg timezone=Asia/Shanghai
+# --build-arg timezone=America/SaoPaulo
 ARG timezone
+ARG opcache_enable=1
+ARG opcache_memory_consumption=256
+ARG opcache_interned_strings_buffer=16
+ARG opcache_max_accelerated_files=20000
 
 ENV TIMEZONE=${timezone:-"America/Sao_Paulo"} \
     APP_ENV=prod \
-    SCAN_CACHEABLE=(true)
+    SCAN_CACHEABLE=(true) \
+    PHP_OPCACHE_ENABLE=${opcache_enable} \
+    PHP_OPCACHE_MEMORY_CONSUMPTION=${opcache_memory_consumption} \
+    PHP_OPCACHE_INTERNED_STRINGS_BUFFER=${opcache_interned_strings_buffer} \
+    PHP_OPCACHE_MAX_ACCELERATED_FILES=${opcache_max_accelerated_files}
 
 # update
 RUN set -ex \
@@ -24,6 +32,18 @@ RUN set -ex \
     && php -v \
     && php -m \
     && php --ri swoole \
+    # Configurações do OPcache
+    && { \
+        echo "opcache.enable=${PHP_OPCACHE_ENABLE}"; \
+        echo "opcache.enable_cli=1"; \
+        echo "opcache.memory_consumption=${PHP_OPCACHE_MEMORY_CONSUMPTION}"; \
+        echo "opcache.interned_strings_buffer=${PHP_OPCACHE_INTERNED_STRINGS_BUFFER}"; \
+        echo "opcache.max_accelerated_files=${PHP_OPCACHE_MAX_ACCELERATED_FILES}"; \
+        echo "opcache.validate_timestamps=0"; \
+        echo "opcache.jit_buffer_size=64M"; \
+        echo "opcache.jit=1235"; \
+        # echo "opcache.opcache.use_cwd=0"; \
+    } > /etc/php83/conf.d/00_opcache.ini \
     #  ---------- some config ----------
     && cd /etc/php* \
     # - config PHP
