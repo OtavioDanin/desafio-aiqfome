@@ -6,6 +6,8 @@
 
 API RESTful desenvolvida como parte do desafio Aiqfome. O projeto consiste em um sistema para gerenciar clientes e suas listas de produtos favoritos, com integração a uma API externa de produtos e um sistema de cache para otimização de performance.
 
+A abordagem deste 
+
 # Arquitetura e Design do Projeto: Monólito Modular com DDD e Clean Architecture
 
 Este projeto foi estruturado utilizando uma abordagem moderna e robusta que combina os princípios de **Monólito Modular**, **Domain-Driven Design (DDD)** e **Clean Architecture**. O objetivo é criar uma base de código organizada, coesa, com baixo acoplamento e alta testabilidade, proporcionando os benefícios de organização dos microsserviços sem a complexidade operacional.
@@ -28,6 +30,7 @@ Modules/
     └── UI
 ```
 
+![image](<https://github.com/OtavioDanin/desafio-aiqfome/blob/main/comunicacaoModulos.jpg>)
 ## 1. O Monólito Modular (A Estrutura Geral)
 
 Em vez de construir uma única aplicação monolítica onde tudo está misturado, o código é dividido em **Módulos** independentes que podem se comunicar de forma bem definida.
