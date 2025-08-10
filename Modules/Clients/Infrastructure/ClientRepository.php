@@ -41,4 +41,12 @@ class ClientRepository implements ClientRepositoryInterface
         $cliente = $this->client::query()->findOrFail($id);
         return $cliente->delete();
     }
+
+    public function findByNomeAndEmail(string $nome, string $email): Collection
+    {
+        return $this->client->query()
+            ->where('nome', '=', $nome)
+            ->where('email', '=', $email)
+            ->get();
+    }
 }

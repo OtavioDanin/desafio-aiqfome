@@ -19,7 +19,7 @@ class ClientService implements ClientServiceInterface
     public function getAll(): array
     {
         $clients =  $this->clientRepository->findAll();
-        if($clients->isEmpty()) {
+        if (empty($clients->toArray())) {
             return ['data' => [], 'message' => 'Clients data empty.'];
         }
         return $clients->toArray();
@@ -33,7 +33,7 @@ class ClientService implements ClientServiceInterface
 
     public function save(array $data): void
     {
-        if(empty($data)){
+        if (empty($data)) {
             throw new ClientException('Empty data for insertion client.', 400);
         }
         $this->clientRepository->persist($data);
@@ -47,8 +47,17 @@ class ClientService implements ClientServiceInterface
     public function delete(int $id): void
     {
         $hasDelete = $this->clientRepository->delete($id);
-        if(!isset($hasDelete) || !$hasDelete){
+        if (!isset($hasDelete) || !$hasDelete) {
             throw new ClientException("Failure to remove the client.", 503);
         }
+    }
+
+    public function checkClienteByNomeAndEmail(string $nome, string $email): bool
+    {
+        $client = $this->clientRepository->findByNomeAndEmail($nome, $email);
+        if (empty($client->toArray())) {
+            return false;
+        }
+        return true;
     }
 }
