@@ -27,4 +27,10 @@ class FavoriteRepository implements FavoriteRepositoryInterface
             ->where('product_id', '=', $idProduct)
             ->get();
     }
+
+    public function delete(int $id): ?bool
+    {
+        $favorite = $this->favorite::query()->findOrFail($id);
+        return $favorite->delete();
+    }
 }

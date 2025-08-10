@@ -121,7 +121,7 @@ class ClientController extends AbstractController
                 ->withStatus(404);
         } catch (QueryException) {
             return $response
-                ->json(['message' => 'Failed to update the Client.'])
+                ->json(['message' => 'Failed to delete the Client.'])
                 ->withStatus(503);
         } catch (Throwable) {
             return $response

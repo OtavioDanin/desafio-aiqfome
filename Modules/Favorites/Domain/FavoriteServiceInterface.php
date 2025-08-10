@@ -7,4 +7,5 @@ namespace Modules\Favorites\Domain;
 interface FavoriteServiceInterface
 {
     public function save(array $data);
+    public function delete(int $id);
 }
