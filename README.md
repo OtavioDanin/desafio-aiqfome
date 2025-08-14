@@ -150,7 +150,7 @@ Essa arquitetura resulta em um sistema **escalável**, **fácil de testar** (poi
 5.  **Execute as Migrations:**
     Para criar as tabelas no banco de dados.
     ```bash
-    php bin/hyperf.php migrate
+    php bin/hyperf.php migrate:fresh --seed
     ```
 
 6.  **Inicie o servidor:**
